@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Keeper</title>
+    <script src="https://kit.fontawesome.com/7fe634c4f7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Score Card</h1>
+            <p>Directions: Add every player and then use the buttons to add or remove strokes from their score.  
+            </p> 
+        </div>
+    </header>
+    <section class="scorebox">
+        <div class="scoreheader"> 
+            <h2>Current Scores:</h2>
+        </div>
+        <div class="playerdata"></div>
+            <ul class="players">
+            <% for(let i=0; i < info.length; i++) {%>
+                <li class="player">
+                    <span><%= info[i].playerName %></span>
+                    <span class="fa-solid fa-circle-minus"></span>
+                    <span><%= info[i].score %></span>
+                    <span class="fa-solid fa-circle-plus"></span>
+                    <span class='fa fa-trash'></span>
+                </li>
+            <% } %>
+            </ul>
+            <h3>Add a Player:</h3>
+            <form action="/addPlayer" method="POST">
+                <input type="text" placeholder="Player Name" name="playerName">
+                <input type="submit">
+            </form>
+        </div>
+    </section>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
