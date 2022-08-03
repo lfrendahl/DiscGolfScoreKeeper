@@ -19,10 +19,6 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
 
-app.listen(process.env.PORT || PORT, ()=>{
-    console.log(`Server running on port ${PORT}`)
-})
-
 //READ: What should 'rappers' = scorecard be?
 app.get('/',(request, response) =>{
     db.collection('players').find().sort({score: -1}).toArray()
@@ -84,4 +80,8 @@ app.delete('/deletePlayer', (request, response) => {
         response.json('Player deleter')
     })
     .catch(error => console.error(error))
+})
+
+app.listen(process.env.PORT || PORT, ()=>{
+    console.log(`Server running on port ${PORT}`)
 })
