@@ -1,7 +1,7 @@
 //select all the font awesome trashcans and thumbs up
 const deletePlayerText = document.querySelectorAll('.fa-trash')
 const removeStroke = document.querySelectorAll('.fa-circle-minus')
-const addStoke = document.querySelectorAll('.fa-circle-plus')
+const addStroke = document.querySelectorAll('.fa-circle-plus')
 
 
 Array.from(deletePlayerText).forEach((element)=>{
@@ -9,14 +9,14 @@ Array.from(deletePlayerText).forEach((element)=>{
 })
 
 Array.from(removeStroke).forEach((element)=>{
-    element.addEventListener('click', removeOne)
+    element.addEventListener('click', removeOneStroke)
 })
 
 Array.from(addStroke).forEach((element)=>{
-    element.addEventListener('click', addOne)
+    element.addEventListener('click', addOneStroke)
 })
 
-async function deleteRapper(){
+async function deletePlayer(){
     const pName = this.parentNode.childNodes[1].innerText
     const pScore = Number(this.parentNode.childNodes[5].innerText)
     try{
@@ -37,7 +37,7 @@ async function deleteRapper(){
     }
 }
 //starts by identifying exactly which <li> we need to change using the parent node of the button clicked. Then it gets ready to send this information using the path specified in server.js ('addOneLike' will be the specified put path)
-async function addOne(){
+async function addOneStroke(){
     const pName = this.parentNode.childNodes[1].innerText
     const pScore = Number(this.parentNode.childNodes[5].innerText)
     try{
@@ -59,7 +59,7 @@ async function addOne(){
 }
 
 //starts by identifying exactly which <li> we need to change using the parent node of the button clicked. Then it gets ready to send this information using the path specified in server.js ('addOneLike' will be the specified put path)
-async function removeOne(){
+async function removeOneStroke(){
     const pName = this.parentNode.childNodes[1].innerText
     const pScore = Number(this.parentNode.childNodes[5].innerText)
     try{
