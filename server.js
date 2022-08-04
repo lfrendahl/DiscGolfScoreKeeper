@@ -21,7 +21,7 @@ app.use(express.json())
 
 //READ: What should 'rappers' = scorecard be?
 app.get('/',(request, response) =>{
-    db.collection('players').find().sort({score: -1}).toArray()
+    db.collection('players').find().sort({score: 1}).toArray()
     .then(data => {
         response.render('index.ejs', { info: data})
     })
@@ -74,10 +74,10 @@ app.put('/removeOneStroke', (request, response) => {
 
 //DELETE: deleteOne
 app.delete('/deletePlayer', (request, response) => {
-    db.collection('players').deleteOne({playerName: request.body.playerNameCur})
+    db.collection('players').deleteOne({playerName: request.body.playerNameCur || ''})
     .then(result => {
         console.log('Player deleted')
-        response.json('Player deleter')
+        response.json('Player deleted')
     })
     .catch(error => console.error(error))
 })

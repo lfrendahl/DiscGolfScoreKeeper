@@ -17,8 +17,8 @@ Array.from(addStroke).forEach((element)=>{
 })
 
 async function deletePlayer(){
-    const pName = this.parentNode.childNodes[1].innerText
-    const pScore = Number(this.parentNode.childNodes[5].innerText)
+    const pName = this.parentNode.parentNode.childNodes[3].innerText 
+    const pScore = Number(this.parentNode.parentNode.childNodes[5].childNodes[3].innerText)
     try{
         const response = await fetch('deletePlayer', {
             method: 'delete',
@@ -38,8 +38,8 @@ async function deletePlayer(){
 }
 //starts by identifying exactly which <li> we need to change using the parent node of the button clicked. Then it gets ready to send this information using the path specified in server.js ('addOneLike' will be the specified put path)
 async function addOneStroke(){
-    const pName = this.parentNode.childNodes[1].innerText
-    const pScore = Number(this.parentNode.childNodes[5].innerText)
+    const pName = this.parentNode.parentNode.childNodes[3].innerText 
+    const pScore = Number(this.parentNode.childNodes[2].innerText)
     try{
         const response = await fetch('addOneStroke', {
             method: 'put',
@@ -60,8 +60,9 @@ async function addOneStroke(){
 
 //starts by identifying exactly which <li> we need to change using the parent node of the button clicked. Then it gets ready to send this information using the path specified in server.js ('addOneLike' will be the specified put path)
 async function removeOneStroke(){
-    const pName = this.parentNode.childNodes[1].innerText
-    const pScore = Number(this.parentNode.childNodes[5].innerText)
+    const pName = this.parentNode.parentNode.childNodes[3].innerText 
+    const pScore = Number(this.parentNode.childNodes[2].innerText)
+   
     try{
         const response = await fetch('removeOneStroke', {
             method: 'put',
