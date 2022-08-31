@@ -4,7 +4,7 @@
 
 **Link to project:** https://disc-golf-score-keeper.herokuapp.com/
 
-![score card with names and current scores](https://github.com/lfrendahl/DiscGolfScoreKeeper/commit/48726f3763d2beee8421c589bcb6ce591541bd47)
+![score card with names and current scores](https://github.com/lfrendahl/DiscGolfScoreKeeper/blob/main/scorecardCover.jpg)
 
 
 ## How It's Made:
