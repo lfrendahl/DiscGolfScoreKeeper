@@ -4,9 +4,6 @@ const app = express()
 const PORT = process.env.PORT || 2121
 require('dotenv').config()
 
-let db,
-    dbConnectionStr = process.env.DB_STRING,
-    dbName = 'DiscGolfScoreKeeper'
 
 //MONGOCLIENT
 const uri = process.env.DB_STRING;
@@ -19,26 +16,25 @@ app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
 
 //Routes go here
-/*
-app.get('/items/:my_item', async (req, res) => {
-    let my_item = req.params.my_item;
-    let item = await client.db("my_db")
-                .collection("my_collection")
-                .findOne({my_item: my_item})
-
-    return res.json(item)
-})*/
-
-//READ:
-
-app.get('/',(request, response) =>{
+/*app.get('/',(request, response) =>{
     db.collection('players').find().sort({score: 1}).toArray()
     .then(data => {
         response.render('index.ejs', { info: data})
     })
     .catch(error => console.error(error))
-})
+})*/
+//READ:
 
+app.get('/', async (req, res) => {
+    let players = await client.db('DiscGolfScoreKeeper')
+                        .collection('players')
+            .find().sort({score: 1}).toArray()
+   
+    return res.render('index.ejs', {info: players})
+    })
+   
+
+/*
 //CREATE /addPlayer 
 app.post('/addPlayer', (request, response) => {
     db.collection('players').insertOne({playerName: request.body.playerName, score: 0})
@@ -92,8 +88,21 @@ app.delete('/deletePlayer', (request, response) => {
     })
     .catch(error => console.error(error))
 })
+*/
 
 /*OLD CONNECT
+let db,
+    dbConnectionStr = process.env.DB_STRING,
+    dbName = 'DiscGolfScoreKeeper'
+
+    app.get('/',(request, response) =>{
+    db.collection('players').find().sort({score: 1}).toArray()
+    .then(data => {
+        response.render('index.ejs', { info: data})
+    })
+    .catch(error => console.error(error))
+})
+
 MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true})
     .then(client => {
         console.log(`Connected to ${dbName} Database`)
