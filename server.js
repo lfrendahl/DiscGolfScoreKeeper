@@ -31,9 +31,9 @@ app.get('/', async (req, res) => {
 
 //CREATE /addPlayer 
 app.post('/addPlayer', async (req, res) => {
-    await client.db('DiscGolfScoreKeeper')
+   await client.db('DiscGolfScoreKeeper')
                         .collection('players')
-                        .insertOne({playerName: request.body.playerName, score: 0})
+                        .insertOne({playerName: req.body.playerName, score: 0})
         console.log('New player added')
     return res.redirect('/')
     })
