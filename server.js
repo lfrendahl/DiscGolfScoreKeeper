@@ -1,12 +1,8 @@
 const { MongoClient }  = require('mongodb');
 const express = require('express')
 const app = express()
-const PORT = process.env.PORT || 2121
+const PORT = process.env.DB_STRING || 2121
 require('dotenv').config()
-
-let db,
-    dbConnectionStr = process.env.DB_STRING,
-    dbName = 'DiscGolfScoreKeeper'
 
 //MONGOCLIENT
 const uri = process.env.DB_STRING;
@@ -21,16 +17,18 @@ app.use(express.json())
 
 //Routes go here
 
-//READ: What should 'rappers' = scorecard be?
-app.get('/',(request, response) =>{
-    db.collection('players').find().sort({score: 1}).toArray()
-    .then(data => {
-        response.render('index.ejs', { info: data})
-    })
-    .catch(error => console.error(error))
+app.get('/', async (req, res) => {
+    let my_item = req.params.my_item;
+    let item = await client.db("my_db")
+                .collection("my_collection")
+                .findOne({my_item: my_item})
+
+    return res.json(item)
 })
 
-//CREATE /addPlayer = /addRapper
+//READ:
+
+//CREATE /addPlayer 
 app.post('/addPlayer', (request, response) => {
     db.collection('players').insertOne({playerName: request.body.playerName, score: 0})
     .then(result => {
@@ -85,7 +83,7 @@ app.delete('/deletePlayer', (request, response) => {
 })
 
 
-MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true})
+MongoClient.connect(PORT, { useUnifiedTopology: true})
     .then(client => {
         console.log(`Connected to ${dbName} Database`)
         db = client.db(dbName)
