@@ -28,7 +28,7 @@ app.use(express.json())
 
 //READ: What should 'rappers' = scorecard be?
 app.get('/',(request, response) =>{
-    db.collection('players').find().sort({score: 1}).toArray()
+    client.collection('players').find().sort({score: 1}).toArray()
     .then(data => {
         response.render('index.ejs', { info: data})
     })
@@ -37,7 +37,7 @@ app.get('/',(request, response) =>{
 
 //CREATE /addPlayer = /addRapper
 app.post('/addPlayer', (request, response) => {
-    db.collection('players').insertOne({playerName: request.body.playerName, score: 0})
+    client.collection('players').insertOne({playerName: request.body.playerName, score: 0})
     .then(result => {
         console.log('New player added')
         response.redirect('/')
@@ -47,7 +47,7 @@ app.post('/addPlayer', (request, response) => {
 
 //UPDATE - RAISE score
 app.put('/addOneStroke', (request, response) => {
-    db.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
+    client.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
         $set: {
             score:request.body.scoreCur + 1
         }
@@ -64,7 +64,7 @@ app.put('/addOneStroke', (request, response) => {
 
 //UPDATE - LOWER score
 app.put('/removeOneStroke', (request, response) => {
-    db.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
+    client.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
         $set: {
             score:request.body.scoreCur - 1
         }
@@ -81,7 +81,7 @@ app.put('/removeOneStroke', (request, response) => {
 
 //DELETE: deleteOne
 app.delete('/deletePlayer', (request, response) => {
-    db.collection('players').deleteOne({playerName: request.body.playerNameCur || ''})
+    client.collection('players').deleteOne({playerName: request.body.playerNameCur || ''})
     .then(result => {
         console.log('Player deleted')
         response.json('Player deleted')
