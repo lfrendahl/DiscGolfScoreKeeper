@@ -8,16 +8,29 @@ let db,
     dbConnectionStr = process.env.DB_STRING,
     dbName = 'DiscGolfScoreKeeper'
 
-MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true})
+/*MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true})
     .then(client => {
         console.log(`Connected to ${dbName} Database`)
         db = client.db(dbName)
-    })
+    })*/
+
+//Connect to DB
+    const connectDB = async () => {
+        try {
+          const conn = await mongoose.connect(process.env.MONGO_URI);
+          console.log(`MongoDB Connected: ${conn.connection.host}`);
+        } catch (error) {
+          console.log(error);
+          process.exit(1);
+        }
+      }
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
+
+//Routes go here
 
 //READ: What should 'rappers' = scorecard be?
 app.get('/',(request, response) =>{
@@ -82,6 +95,13 @@ app.delete('/deletePlayer', (request, response) => {
     .catch(error => console.error(error))
 })
 
-app.listen(process.env.PORT || PORT, ()=>{
+/*app.listen(process.env.PORT || PORT, ()=>{
     console.log(`Server running on port ${PORT}`)
+})*/
+
+//Connect to the database before listening
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log("listening for requests");
+    })
 })
