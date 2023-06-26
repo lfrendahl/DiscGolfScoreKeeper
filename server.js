@@ -16,13 +16,7 @@ app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
 
 //Routes go here
-/*app.get('/',(request, response) =>{
-    db.collection('players').find().sort({score: 1}).toArray()
-    .then(data => {
-        response.render('index.ejs', { info: data})
-    })
-    .catch(error => console.error(error))
-})*/
+
 //READ:
 
 app.get('/', async (req, res) => {
@@ -34,17 +28,18 @@ app.get('/', async (req, res) => {
     })
    
 
-/*
-//CREATE /addPlayer 
-app.post('/addPlayer', (request, response) => {
-    db.collection('players').insertOne({playerName: request.body.playerName, score: 0})
-    .then(result => {
-        console.log('New player added')
-        response.redirect('/')
-    })
-    .catch(error => console.error(error))
-})
 
+//CREATE /addPlayer 
+app.post('/addPlayer', async (req, res) => {
+    await client.db('DiscGolfScoreKeeper')
+                        .collection('players')
+                        .insertOne({playerName: request.body.playerName, score: 0})
+        console.log('New player added')
+    return res.redirect('/')
+    })
+
+
+/*
 //UPDATE - RAISE score
 app.put('/addOneStroke', (request, response) => {
     db.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
@@ -90,6 +85,12 @@ app.delete('/deletePlayer', (request, response) => {
 })
 */
 
+
+
+
+
+
+
 /*OLD CONNECT
 let db,
     dbConnectionStr = process.env.DB_STRING,
@@ -99,6 +100,15 @@ let db,
     db.collection('players').find().sort({score: 1}).toArray()
     .then(data => {
         response.render('index.ejs', { info: data})
+    })
+    .catch(error => console.error(error))
+})
+//CREATE /addPlayer 
+app.post('/addPlayer', (request, response) => {
+    db.collection('players').insertOne({playerName: request.body.playerName, score: 0})
+    .then(result => {
+        console.log('New player added')
+        response.redirect('/')
     })
     .catch(error => console.error(error))
 })
