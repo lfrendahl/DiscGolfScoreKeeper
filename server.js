@@ -1,12 +1,16 @@
-const MongoClient = require('mongodb').MongoClient
+const { MongoClient }  = require('mongodb');
 const express = require('express')
 const app = express()
-const PORT = 2121
+const PORT = process.env.PORT || 2121
 require('dotenv').config()
 
-let db,
+/*let db,
     dbConnectionStr = process.env.DB_STRING,
-    dbName = 'DiscGolfScoreKeeper'
+    dbName = 'DiscGolfScoreKeeper'*/
+
+//MONGOCLIENT
+const uri = process.env.DB_STRING;
+const client = new MongoClient(uri);
 
 /*MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true})
     .then(client => {
@@ -14,16 +18,6 @@ let db,
         db = client.db(dbName)
     })*/
 
-//Connect to DB
-    const connectDB = async () => {
-        try {
-          const conn = await mongoose.connect(process.env.MONGO_URI);
-          console.log(`MongoDB Connected: ${conn.connection.host}`);
-        } catch (error) {
-          console.log(error);
-          process.exit(1);
-        }
-      }
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
@@ -99,9 +93,11 @@ app.delete('/deletePlayer', (request, response) => {
     console.log(`Server running on port ${PORT}`)
 })*/
 
-//Connect to the database before listening
-connectDB().then(() => {
+//Connect to the database before listening MONGOCLIENT
+client.connect(err => {
+    if(err){ console.error(err); return false;}
+    // connection to mongo is successful, listen for requests
     app.listen(PORT, () => {
         console.log("listening for requests");
     })
-})
+});
