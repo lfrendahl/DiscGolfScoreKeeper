@@ -4,19 +4,14 @@ const app = express()
 const PORT = process.env.PORT || 2121
 require('dotenv').config()
 
-/*let db,
+let db,
     dbConnectionStr = process.env.DB_STRING,
-    dbName = 'DiscGolfScoreKeeper'*/
+    dbName = 'DiscGolfScoreKeeper'
 
 //MONGOCLIENT
 const uri = process.env.DB_STRING;
 const client = new MongoClient(uri);
 
-/*MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true})
-    .then(client => {
-        console.log(`Connected to ${dbName} Database`)
-        db = client.db(dbName)
-    })*/
 
 
 app.set('view engine', 'ejs')
@@ -28,7 +23,7 @@ app.use(express.json())
 
 //READ: What should 'rappers' = scorecard be?
 app.get('/',(request, response) =>{
-    client.collection('players').find().sort({score: 1}).toArray()
+    db.collection('players').find().sort({score: 1}).toArray()
     .then(data => {
         response.render('index.ejs', { info: data})
     })
@@ -37,7 +32,7 @@ app.get('/',(request, response) =>{
 
 //CREATE /addPlayer = /addRapper
 app.post('/addPlayer', (request, response) => {
-    client.collection('players').insertOne({playerName: request.body.playerName, score: 0})
+    db.collection('players').insertOne({playerName: request.body.playerName, score: 0})
     .then(result => {
         console.log('New player added')
         response.redirect('/')
@@ -47,7 +42,7 @@ app.post('/addPlayer', (request, response) => {
 
 //UPDATE - RAISE score
 app.put('/addOneStroke', (request, response) => {
-    client.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
+    db.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
         $set: {
             score:request.body.scoreCur + 1
         }
@@ -64,7 +59,7 @@ app.put('/addOneStroke', (request, response) => {
 
 //UPDATE - LOWER score
 app.put('/removeOneStroke', (request, response) => {
-    client.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
+    db.collection('players').updateOne({playerName: request.body.playerNameCur, score: request.body.scoreCur},{
         $set: {
             score:request.body.scoreCur - 1
         }
@@ -81,7 +76,7 @@ app.put('/removeOneStroke', (request, response) => {
 
 //DELETE: deleteOne
 app.delete('/deletePlayer', (request, response) => {
-    client.collection('players').deleteOne({playerName: request.body.playerNameCur || ''})
+    db.collection('players').deleteOne({playerName: request.body.playerNameCur || ''})
     .then(result => {
         console.log('Player deleted')
         response.json('Player deleted')
@@ -89,15 +84,23 @@ app.delete('/deletePlayer', (request, response) => {
     .catch(error => console.error(error))
 })
 
-/*app.listen(process.env.PORT || PORT, ()=>{
-    console.log(`Server running on port ${PORT}`)
-})*/
 
-//Connect to the database before listening MONGOCLIENT
+MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true})
+    .then(client => {
+        console.log(`Connected to ${dbName} Database`)
+        db = client.db(dbName)
+    })
+
+    app.listen(process.env.PORT || PORT, ()=>{
+    console.log(`Server running on port ${PORT}`)
+})
+
+
+/*Connect to the database before listening MONGOCLIENT
 client.connect(err => {
     if(err){ console.error(err); return false;}
     // connection to mongo is successful, listen for requests
     app.listen(PORT, () => {
         console.log("listening for requests");
     })
-});
+});*/
