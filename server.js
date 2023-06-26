@@ -1,13 +1,16 @@
 const { MongoClient }  = require('mongodb');
 const express = require('express')
 const app = express()
-const PORT = process.env.DB_STRING || 2121
+const PORT = process.env.PORT || 2121
 require('dotenv').config()
+
+let db,
+    dbConnectionStr = process.env.DB_STRING,
+    dbName = 'DiscGolfScoreKeeper'
 
 //MONGOCLIENT
 const uri = process.env.DB_STRING;
 const client = new MongoClient(uri);
-
 
 
 app.set('view engine', 'ejs')
@@ -16,17 +19,25 @@ app.use(express.urlencoded({ extended: true}))
 app.use(express.json())
 
 //Routes go here
-
-app.get('/', async (req, res) => {
+/*
+app.get('/items/:my_item', async (req, res) => {
     let my_item = req.params.my_item;
     let item = await client.db("my_db")
                 .collection("my_collection")
                 .findOne({my_item: my_item})
 
     return res.json(item)
-})
+})*/
 
 //READ:
+
+app.get('/',(request, response) =>{
+    db.collection('players').find().sort({score: 1}).toArray()
+    .then(data => {
+        response.render('index.ejs', { info: data})
+    })
+    .catch(error => console.error(error))
+})
 
 //CREATE /addPlayer 
 app.post('/addPlayer', (request, response) => {
@@ -82,8 +93,8 @@ app.delete('/deletePlayer', (request, response) => {
     .catch(error => console.error(error))
 })
 
-
-MongoClient.connect(PORT, { useUnifiedTopology: true})
+/*OLD CONNECT
+MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true})
     .then(client => {
         console.log(`Connected to ${dbName} Database`)
         db = client.db(dbName)
@@ -91,14 +102,14 @@ MongoClient.connect(PORT, { useUnifiedTopology: true})
 
     app.listen(process.env.PORT || PORT, ()=>{
     console.log(`Server running on port ${PORT}`)
-})
+}) */
 
 
-/*Connect to the database before listening MONGOCLIENT
+//Connect to the database before listening MONGOCLIENT
 client.connect(err => {
     if(err){ console.error(err); return false;}
     // connection to mongo is successful, listen for requests
     app.listen(PORT, () => {
         console.log("listening for requests");
     })
-});*/
+});
